@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プラズマ物理 総復習問題集（ノート完全対応）</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']],
+    macros: { bm: ['\\boldsymbol{#1}', 1] }
+  },
+  options: { enableMenu: false },
+  startup: {
+    pageReady() {
+      return MathJax.startup.defaultPageReady().then(() => {
+        window.__mjReady = true;
+        return MathJax.typesetPromise();
+      });
+    }
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+Antique:wght@500;700&family=JetBrains+Mono:wght@500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#10141c; --panel:#171c27; --panel2:#1d2433; --ink:#e7ecf3; --ink-dim:#9aa6b8;
+    --line:#2a3346; --field:#3d7bd6; --flux:#43c59e; --flux-dim:#1f6e56; --radius:14px;
+  }
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);line-height:1.9;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 15% -10%, rgba(61,123,214,.10), transparent 40%),radial-gradient(circle at 90% 0%, rgba(67,197,158,.08), transparent 35%);min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:2rem 1.1rem 5rem}
+  header{margin-bottom:1.4rem}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--field);text-transform:uppercase}
+  h1{font-family:'Zen Kaku Gothic Antique',sans-serif;font-weight:700;font-size:29px;margin:.25rem 0 .15rem;line-height:1.25}
+  .sub{color:var(--ink-dim);font-size:13.5px}
+  .progress-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:.9rem 1.1rem;margin:1.2rem 0 1rem;display:flex;align-items:center;gap:1rem}
+  .ring{position:relative;width:52px;height:52px;flex-shrink:0}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--flux)}
+  .progress-text{font-size:13px;color:var(--ink-dim)}
+  .progress-text b{color:var(--ink)}
+  .reset{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink-dim);font-size:11.5px;padding:5px 12px;border-radius:99px;cursor:pointer;font-family:inherit;transition:.15s}
+  .reset:hover{border-color:var(--field);color:var(--ink)}
+  .filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.3rem}
+  .chip{font-size:12.5px;font-family:inherit;padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink-dim);cursor:pointer;transition:.15s;white-space:nowrap}
+  .chip:hover{color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--field);border-color:var(--field);color:#fff}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:1.1rem;overflow:hidden}
+  .card.done{border-color:var(--flux-dim)}
+  .card-head{display:flex;align-items:flex-start;gap:.8rem;padding:1.05rem 1.2rem .4rem}
+  .qnum{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--bg);background:var(--field);border-radius:7px;padding:3px 8px;flex-shrink:0;margin-top:3px}
+  .card.done .qnum{background:var(--flux);color:#06241b}
+  .qtitle{font-family:'Zen Kaku Gothic Antique',sans-serif;font-weight:700;font-size:18px;flex:1}
+  .tag{font-size:10.5px;font-family:'JetBrains Mono',monospace;color:var(--ink-dim);border:1px solid var(--line);border-radius:99px;padding:2px 9px;align-self:center;white-space:nowrap}
+  .card-body{padding:0 1.2rem 1.1rem}
+  .setup{font-size:14.5px;margin:.3rem 0 .6rem}
+  ol.subq{list-style:none;counter-reset:sq;margin:.4rem 0 0}
+  ol.subq li{counter-increment:sq;position:relative;padding:.32rem 0 .32rem 2rem;font-size:14px;color:#d4dbe7}
+  ol.subq li::before{content:"("counter(sq)")";position:absolute;left:0;top:.32rem;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--field)}
+  .actions{display:flex;gap:.6rem;align-items:center;margin-top:1rem;flex-wrap:wrap}
+  .btn{font-family:inherit;font-size:13px;border-radius:9px;padding:8px 16px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);transition:.15s;font-weight:500}
+  .btn:hover{border-color:var(--field)}
+  .btn-sol[aria-expanded="true"]{background:var(--field);border-color:var(--field);color:#fff}
+  .check{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-dim);cursor:pointer;user-select:none;margin-left:auto}
+  .check input{appearance:none;width:18px;height:18px;border:1.5px solid var(--line);border-radius:5px;cursor:pointer;position:relative;transition:.15s}
+  .check input:checked{background:var(--flux);border-color:var(--flux)}
+  .check input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#06241b;font-size:12px;font-weight:700}
+  .solution{display:none;margin-top:.9rem;border-top:1px dashed var(--line);padding-top:.9rem}
+  .solution.open{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .sol-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--flux);text-transform:uppercase;margin-bottom:.5rem}
+  .sol-step{font-size:13.5px;color:#cfd7e3;margin:.55rem 0;padding-left:1.5rem;position:relative}
+  .sol-step b{color:var(--flux);font-weight:700}
+  .sol-step::before{content:"▸";position:absolute;left:.3rem;color:var(--flux-dim)}
+  mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+  .empty{text-align:center;color:var(--ink-dim);padding:3rem 1rem;font-size:14px}
+  footer{text-align:center;color:var(--ink-dim);font-size:12px;margin-top:2.5rem;line-height:1.7}
+  @media(max-width:520px){h1{font-size:23px}.qtitle{font-size:16px}.tag{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PLASMA PHYSICS // EXAM PREP</div>
+    <h1>プラズマ物理 総復習問題集</h1>
+    <div class="sub">全19問 ── 講義ノート全章対応（14章 帯状流まで）・過去問形式・導出重視</div>
+  </header>
+
+  <div class="progress-card">
+    <div class="ring">
+      <svg width="52" height="52">
+        <circle cx="26" cy="26" r="22" fill="none" stroke="var(--line)" stroke-width="5"/>
+        <circle id="ringFill" cx="26" cy="26" r="22" fill="none" stroke="var(--flux)" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
+      </svg>
+      <div class="val" id="ringVal">0%</div>
+    </div>
+    <div class="progress-text">習得 <b id="doneCount">0</b> / <span id="totalCount">14</span><br><span id="byField" style="font-size:12px"></span></div>
+    <button class="reset" id="resetBtn">進捗をリセット</button>
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div id="list"></div>
+
+  <footer>数値係数や符号は規格化・座標の取り方で変わり得ます。導出の筋道の確認用。<br>進捗はページを開いている間のみ保持されます。</footer>
+</div>
+
+<script>
+const FIELDS = {
+  single:{label:'I. 単粒子'},
+  coll:  {label:'II. 集団'},
+  wave:  {label:'III. 波動'},
+  mhd:   {label:'IV. MHD'},
+  drift: {label:'V. ドリフト波'},
+};
+
+const PROBLEMS = [
+{n:1, field:'coll', ch:'1章', title:'プラズマの成立条件と記述モデル',
+ setup:`電子密度 \\(n\\)、温度 \\(T\\) の電離気体を考える。`,
+ subs:[
+  `準中性の条件 \\(L\\gg\\lambda_D\\) と集団性の条件 \\(n\\lambda_D^3\\gg1\\) を書き、それぞれがなぜプラズマの定義に必要かを述べよ。`,
+  `\\(n\\lambda_D^3\\gg1\\) が「1対1のクーロン衝突より集団的な電磁相互作用が支配的」を意味することを説明せよ。`,
+  `運動論的記述（分布関数 \\(f(\\boldsymbol{r},\\boldsymbol{v},t)\\)）から流体的記述（\\(n,\\boldsymbol{u},p\\)）へ移るとき、どんな情報が失われるか。流体では記述できない現象を1つ挙げ、理由を述べよ。`],
+ sol:[
+  `<b>(1)</b> \\(L\\gg\\lambda_D\\)：遮蔽長より大きなスケールでは電荷分離が隠され、巨視的に中性（\\(n_i\\simeq n_e\\)）として扱える。この条件がないと系全体がただの荷電粒子集合であり「プラズマ的」な集団挙動が定義できない。\\(n\\lambda_D^3\\gg1\\)：遮蔽は多数粒子の統計的な協力現象なので、デバイ球に粒子が数個しかいなければ遮蔽の概念自体が成り立たない。`,
+  `<b>(2)</b> 1個の粒子が最近接粒子から受けるクーロンエネルギーは \\(\\sim e^2/4\\pi\\varepsilon_0 d\\)（\\(d\\sim n^{-1/3}\\)：平均間隔）、熱エネルギーは \\(T\\)。比をとると \\[\\frac{e^2 n^{1/3}}{4\\pi\\varepsilon_0 T}\\sim\\frac{1}{(n\\lambda_D^3)^{2/3}}\\] となり、\\(n\\lambda_D^3\\gg1\\) は「隣の粒子1個との相互作用エネルギー ≪ 熱エネルギー」を意味する。個々の衝突は弱く、粒子の運動を支配するのはデバイ球内の多数の粒子が作る滑らかな平均場——つまり集団的相互作用が主役になる。`,
+  `<b>(3)</b> 流体量は \\(f\\) の速度モーメント（\\(n=\\int f\\,d^3v\\) など）なので、<b>速度空間の分布の形</b>の情報が失われる（平均・分散などの少数の数に潰される）。記述できない例：ランダウ減衰。位相速度 \\(\\omega/k\\) 近傍の「特定の速度の共鳴粒子」と波のエネルギー交換が本質で、\\(\\partial f_0/\\partial v|_{\\omega/k}\\) という分布の局所的な傾きが減衰率を決める。モーメントに潰した瞬間この情報は消えるため、流体方程式からは決して出てこない。`]},
+
+{n:2, field:'single', ch:'2〜3章', title:'サイクロトロン運動の完全解と数値評価',
+ setup:`一様磁場 \\(\\boldsymbol{B}=B_0\\boldsymbol{e}_z\\) 中の質量 \\(m\\)、電荷 \\(q\\) の粒子を考える。運動方程式は \\(m\\dot{\\boldsymbol{v}}=q\\boldsymbol{v}\\times\\boldsymbol{B}\\)。`,
+ subs:[
+  `初期条件 \\(\\boldsymbol{v}(0)=(0,v_\\perp,v_\\parallel)\\) のもとで軌道の完全解を導き、サイクロトロン周波数 \\(\\omega_c\\) と旋回半径 \\(\\rho\\) を求めよ。`,
+  `磁場が粒子に仕事をしないことを一般的に示し、それが導出した解でどう確認できるか述べよ。`,
+  `核融合プラズマ（\\(B=5\\,\\mathrm{T}\\)、\\(T_e=T_i=10\\,\\mathrm{keV}\\)、水素）で電子・イオンの旋回半径を概算し、装置サイズ \\(L\\sim1\\,\\mathrm{m}\\) と比較して「磁化」の条件を確認せよ。`],
+ sol:[
+  `<b>(1)</b> 成分分解：\\(\\dot v_x=\\omega_cv_y,\\ \\dot v_y=-\\omega_cv_x,\\ \\dot v_z=0\\)（\\(\\omega_c=qB_0/m\\)）。第1式を微分し第2式を代入：\\(\\ddot v_x=-\\omega_c^2v_x\\)（単振動）。初期条件を課すと \\[v_x=v_\\perp\\sin\\omega_ct,\\quad v_y=v_\\perp\\cos\\omega_ct,\\quad v_z=v_\\parallel\\] さらに積分して \\[x=\\rho(1-\\cos\\omega_ct),\\quad y=\\rho\\sin\\omega_ct,\\quad z=v_\\parallel t,\\qquad \\rho=\\frac{v_\\perp}{\\omega_c}=\\frac{mv_\\perp}{qB_0}\\] 磁力線に巻きつく螺旋軌道。`,
+  `<b>(2)</b> 仕事率は \\(\\boldsymbol{F}\\cdot\\boldsymbol{v}=q(\\boldsymbol{v}\\times\\boldsymbol{B})\\cdot\\boldsymbol{v}=0\\)（外積は \\(\\boldsymbol{v}\\) と直交）。よって運動エネルギーは一定。解での確認：\\(v_x^2+v_y^2=v_\\perp^2(\\sin^2+\\cos^2)=v_\\perp^2=\\)一定、\\(v_z=\\)一定。導出した解が自動的にこれを満たしていることが検算になる。`,
+  `<b>(3)</b> 熱速度 \\(v_{th}=\\sqrt{2T/m}\\) で評価。電子：\\(v_{th,e}\\simeq5.9\\times10^7\\,\\mathrm{m/s}\\)、\\(\\omega_{ce}=eB/m_e\\simeq8.8\\times10^{11}\\,\\mathrm{s^{-1}}\\) より \\[\\rho_e\\simeq\\frac{5.9\\times10^7}{8.8\\times10^{11}}\\simeq7\\times10^{-5}\\,\\mathrm{m}\\sim70\\,\\mu\\mathrm{m}\\] イオン（陽子）：\\(v_{th,i}\\simeq1.4\\times10^6\\,\\mathrm{m/s}\\)、\\(\\omega_{ci}\\simeq4.8\\times10^8\\,\\mathrm{s^{-1}}\\) より \\[\\rho_i\\simeq3\\times10^{-3}\\,\\mathrm{m}\\sim3\\,\\mathrm{mm}\\] いずれも \\(\\rho/L\\lesssim10^{-2}\\ll1\\)：粒子は磁力線に強く束縛されており（磁化）、「旋回＋磁力線に沿う運動＋遅いドリフト」という分解が正当化される。`]},
+
+{n:3, field:'single', ch:'4章', title:'一般ドリフト公式とE×Bドリフト',
+ setup:`一様磁場 \\(\\boldsymbol{B}\\) 中の粒子に、一定の力 \\(\\boldsymbol{F}\\)（\\(\\perp\\boldsymbol{B}\\) 成分をもつ）が加わる。`,
+ subs:[
+  `速度を旋回成分＋一定ドリフト成分 \\(\\boldsymbol{v}=\\boldsymbol{v}_g+\\boldsymbol{v}_d\\) に分け、一般ドリフト公式 \\(\\boldsymbol{v}_d=\\dfrac{\\boldsymbol{F}\\times\\boldsymbol{B}}{qB^2}\\) を導け。`,
+  `\\(\\boldsymbol{F}=q\\boldsymbol{E}\\) の場合に \\(E\\times B\\) ドリフトを求め、電荷・質量に依存しないことの物理的意味を旋回軌道の変形の描像で説明せよ。`,
+  `重力 \\(\\boldsymbol{F}=m\\boldsymbol{g}\\) の場合のドリフトを書き、\\(E\\times B\\) との決定的な違い（電流の有無）とその帰結を述べよ。`],
+ sol:[
+  `<b>(1)</b> 運動方程式 \\(m\\dot{\\boldsymbol{v}}=\\boldsymbol{F}+q\\boldsymbol{v}\\times\\boldsymbol{B}\\) に分解を代入。\\(\\boldsymbol{v}_d\\) が一定なら、旋回に寄与しない部分が釣り合う：\\[\\boldsymbol{F}+q\\boldsymbol{v}_d\\times\\boldsymbol{B}=0\\] 両辺に \\(\\times\\boldsymbol{B}\\)：\\((\\boldsymbol{v}_d\\times\\boldsymbol{B})\\times\\boldsymbol{B}=(\\boldsymbol{v}_d\\cdot\\boldsymbol{B})\\boldsymbol{B}-B^2\\boldsymbol{v}_d\\)。垂直ドリフト（\\(\\boldsymbol{v}_d\\cdot\\boldsymbol{B}=0\\)）で第1項は消え \\[\\boldsymbol{F}\\times\\boldsymbol{B}-qB^2\\boldsymbol{v}_d=0\\ \\Rightarrow\\ \\boldsymbol{v}_d=\\frac{\\boldsymbol{F}\\times\\boldsymbol{B}}{qB^2}\\] 残った \\(\\boldsymbol{v}_g\\) の方程式は純粋なサイクロトロン運動に戻る。`,
+  `<b>(2)</b> \\(\\boldsymbol{F}=q\\boldsymbol{E}\\) を代入すると \\(q\\) が約分され \\[\\boldsymbol{v}_E=\\frac{\\boldsymbol{E}\\times\\boldsymbol{B}}{B^2}\\] 描像：イオンは軌道の電場側半周で加速され（旋回半径が膨らみ）、反対側で減速され（縮む）——軌道が横に歪んで進む。電子は加速される側も旋回の向きも両方逆なので、歪む方向は同じになる。「2つの逆転が打ち消し合う」ため全粒子が同速・同方向。`,
+  `<b>(3)</b> \\[\\boldsymbol{v}_g=\\frac{m\\,\\boldsymbol{g}\\times\\boldsymbol{B}}{qB^2}\\] \\(q\\) と \\(m\\) が残る：イオンと電子が逆方向・異なる速さでドリフトし、<b>電流と電荷分離</b>を生む。帰結：分離電荷が作る電場 \\(\\boldsymbol{E}\\) が \\(E\\times B\\) ドリフトを介して摂動を増幅する——これが交換型（Rayleigh–Taylor型）不安定性の駆動機構（10-2章）であり、曲率を実効重力とみなせばトーラスの「悪い曲率」問題にそのままつながる。`]},
+
+{n:4, field:'single', ch:'5章', title:'分極ドリフトと曲率ドリフト',
+ setup:`一様磁場 \\(\\boldsymbol{B}=B\\boldsymbol{e}_z\\) 中で、垂直電場 \\(\\boldsymbol{E}_\\perp(t)\\) がサイクロトロン周期より十分ゆっくり変化する（\\(|\\dot E/E|\\ll\\omega_c\\)）。`,
+ subs:[
+  `ドリフトを \\(\\boldsymbol{v}_\\perp=\\boldsymbol{v}_E+\\boldsymbol{v}_p\\)（\\(\\boldsymbol{v}_p\\) は小さい補正）とおき、運動方程式の逐次近似から分極ドリフト \\(\\boldsymbol{v}_p=\\dfrac{m}{qB^2}\\dfrac{d\\boldsymbol{E}_\\perp}{dt}\\) を導け。`,
+  `曲率半径 \\(R_c\\) で曲がる磁力線に沿って速度 \\(v_\\parallel\\) で走る粒子が受ける遠心力を書き、曲率ドリフト \\(\\boldsymbol{v}_R=\\dfrac{mv_\\parallel^2}{qB^2}\\dfrac{\\boldsymbol{R}_c\\times\\boldsymbol{B}}{R_c^2}\\) を導け。`,
+  `分極ドリフトが「イオンが主に担う」「ドリフト波の慣性を与える」と言われる理由をそれぞれ述べよ。`],
+ sol:[
+  `<b>(1)</b> 運動方程式 \\(m\\dot{\\boldsymbol{v}}_\\perp=q(\\boldsymbol{E}_\\perp+\\boldsymbol{v}_\\perp\\times\\boldsymbol{B})\\) に \\(\\boldsymbol{v}_\\perp=\\boldsymbol{v}_E+\\boldsymbol{v}_p\\) を代入。\\(\\boldsymbol{v}_E=\\boldsymbol{E}\\times\\boldsymbol{B}/B^2\\) は \\(q\\boldsymbol{E}+q\\boldsymbol{v}_E\\times\\boldsymbol{B}=0\\) を満たすので、残るのは \\[m\\dot{\\boldsymbol{v}}_E\\simeq q\\boldsymbol{v}_p\\times\\boldsymbol{B}\\] （\\(\\dot{\\boldsymbol{v}}_p\\) は2次の小量として無視）。左辺は「\\(E\\times B\\) ドリフトを変化させるのに必要な力」であり、それを供給するローレンツ力を生む速度が \\(\\boldsymbol{v}_p\\)。両辺に \\(\\times\\boldsymbol{B}\\) して解くと \\[\\boldsymbol{v}_p=\\frac{m}{qB^2}\\frac{d\\boldsymbol{E}_\\perp}{dt}\\] 慣性（\\(m\\dot{\\boldsymbol{v}}_E\\)）を見かけの力として一般ドリフト公式に入れた結果と同じ。`,
+  `<b>(2)</b> 磁力線に沿って走る粒子は、旋回中心系で遠心力 \\[\\boldsymbol{F}_c=\\frac{mv_\\parallel^2}{R_c}\\,\\hat{\\boldsymbol{R}}_c=\\frac{mv_\\parallel^2}{R_c^2}\\boldsymbol{R}_c\\] （\\(\\boldsymbol{R}_c\\)：曲率中心から粒子へのベクトル）を受ける。一般ドリフト公式に代入して \\[\\boldsymbol{v}_R=\\frac{\\boldsymbol{F}_c\\times\\boldsymbol{B}}{qB^2}=\\frac{mv_\\parallel^2}{qB^2}\\frac{\\boldsymbol{R}_c\\times\\boldsymbol{B}}{R_c^2}\\] \\(q\\) 依存：イオンと電子で逆向き→電流を生む。`,
+  `<b>(3)</b> <b>イオンが主に担う理由</b>：\\(\\boldsymbol{v}_p\\propto m\\) で、\\(m_i/m_e\\gtrsim1836\\)。慣性効果（電場変化への追随の遅れ）だから重い粒子ほど大きい。<b>慣性を与える理由</b>：ドリフト波では \\(\\tilde\\phi\\) が時間変化 → イオンだけが分極ドリフトで動く → その発散が電荷を溜めようとする → 電流保存を通じて \\(\\partial_t\\nabla_\\perp^2\\phi\\)（渦度の時間発展）の項になる（13章）。流体の \\(\\rho\\,d\\boldsymbol{u}/dt\\) に相当する役をこのドリフトが演じ、分散関係の分母 \\(1+k_\\perp^2\\rho_s^2\\) を作る。`]},
+
+{n:5, field:'coll', ch:'6章', title:'Maxwell分布のエントロピー最大化導出',
+ setup:`ポテンシャル \\(\\phi(\\boldsymbol{r})\\) 中の \\(N\\) 個の粒子（電荷 \\(q\\)）の分布関数 \\(f(\\boldsymbol{r},\\boldsymbol{v})\\) を考える。熱平衡分布を「最もありそうな配り方」として導く。`,
+ subs:[
+  `エントロピー \\(S=-\\int f\\ln f\\,d^3r\\,d^3v\\) を、粒子数 \\(N=\\int f\\) と全エネルギー \\(\\mathcal{E}=\\int\\left(\\frac12mv^2+q\\phi\\right)f\\) を固定して最大化し、\\(f\\propto\\exp\\left[-\\left(\\tfrac12mv^2+q\\phi\\right)/T\\right]\\) を導け（ラグランジュ未定乗数法）。`,
+  `未定乗数の1つが温度の逆数 \\(1/T\\) と同定できる理由を、\\(\\langle\\tfrac12mv^2\\rangle=\\tfrac32T\\) の計算で示せ。`,
+  `この結果からボルツマン関係 \\(n(\\boldsymbol{r})=n_0e^{-q\\phi/T}\\) を導き、このあとの章（デバイ遮蔽・ドリフト波）でどう使われるか述べよ。`],
+ sol:[
+  `<b>(1)</b> 汎関数 \\[\\mathcal{L}=-\\int f\\ln f+\\alpha\\Big(N-\\int f\\Big)+\\beta\\Big(\\mathcal{E}-\\int\\varepsilon f\\Big),\\quad\\varepsilon=\\tfrac12mv^2+q\\phi\\] の変分 \\(\\delta\\mathcal{L}/\\delta f=0\\)：\\[-\\ln f-1-\\alpha-\\beta\\varepsilon=0\\ \\Rightarrow\\ f=e^{-1-\\alpha}e^{-\\beta\\varepsilon}\\propto\\exp\\left[-\\beta\\Big(\\tfrac12mv^2+q\\phi\\Big)\\right]\\] 指数分布は「制約下で場合の数が最大の配り方」として一意に決まる。`,
+  `<b>(2)</b> \\(\\beta=1/T\\) とおいて速度部分で平均を計算：\\[\\langle\\tfrac12mv^2\\rangle=\\frac{\\int\\tfrac12mv^2e^{-mv^2/2T}d^3v}{\\int e^{-mv^2/2T}d^3v}\\] ガウス積分より各方向 \\(\\langle\\tfrac12mv_x^2\\rangle=\\tfrac12T\\)、3方向で \\(\\tfrac32T\\)。エネルギー等分配の形が再現され、\\(\\beta\\) はエネルギースケールを刻む逆温度と同定される（熱力学的には \\(\\beta=\\partial S/\\partial\\mathcal{E}\\)）。`,
+  `<b>(3)</b> 速度で積分すると空間依存部分だけ残り \\[n(\\boldsymbol{r})=\\int f\\,d^3v=n_0\\,e^{-q\\phi(\\boldsymbol{r})/T}\\] 電子（\\(q=-e\\)）なら \\(n_e=n_0e^{+e\\phi/T}\\)。<b>使い所①デバイ遮蔽（7章）</b>：ポアソン方程式と組んで遮蔽ポテンシャルを閉じる。<b>使い所②ドリフト波（13-2章）</b>：電子の断熱応答 \\(\\tilde n/n_0\\simeq e\\tilde\\phi/T\\) の正体。この関係からの「ズレ（位相遅れ）」が不安定性と輸送を生む——平衡分布の式が、乱流理論の出発点まで一本でつながっている。`]},
+
+{n:6, field:'coll', ch:'7章', title:'デバイ遮蔽',
+ setup:`一様プラズマ（電子温度 \\(T\\)、密度 \\(n_0\\)）に試験電荷 \\(q_T>0\\) を置く。イオンは動かない一様背景、電子はボルツマン応答するとする。`,
+ subs:[
+  `ポアソン方程式とボルツマン関係を連立し、\\(e\\phi\\ll T\\) の線形化により \\(\\left(\\nabla^2-\\lambda_D^{-2}\\right)\\phi=-\\dfrac{q_T}{\\varepsilon_0}\\delta(\\boldsymbol{r})\\) を導け。`,
+  `球対称解 \\(\\phi(r)=\\dfrac{q_T}{4\\pi\\varepsilon_0r}e^{-r/\\lambda_D}\\) を導け（ヒント：\\(u=r\\phi\\) とおく）。`,
+  `線形化 \\(e\\phi\\ll T\\) が破れるのはどの領域か。また \\(\\lambda_D\\) の温度・密度依存性を遮蔽雲の描像で説明せよ。`],
+ sol:[
+  `<b>(1)</b> ポアソン方程式：\\(\\nabla^2\\phi=-\\dfrac{1}{\\varepsilon_0}\\left[q_T\\delta(\\boldsymbol{r})+e(n_i-n_e)\\right]\\)。\\(n_i=n_0\\)、\\(n_e=n_0e^{e\\phi/T}\\simeq n_0(1+e\\phi/T)\\) を代入：\\[\\nabla^2\\phi=\\frac{n_0e^2}{\\varepsilon_0T}\\phi-\\frac{q_T}{\\varepsilon_0}\\delta(\\boldsymbol{r})=\\frac{\\phi}{\\lambda_D^2}-\\frac{q_T}{\\varepsilon_0}\\delta(\\boldsymbol{r}),\\qquad\\lambda_D^2=\\frac{\\varepsilon_0T}{n_0e^2}\\]`,
+  `<b>(2)</b> \\(r>0\\) で球対称ラプラシアン \\(\\nabla^2\\phi=\\dfrac1r\\dfrac{d^2}{dr^2}(r\\phi)\\)。\\(u=r\\phi\\) とおくと \\(u''=u/\\lambda_D^2\\)、解は \\(u=Ae^{-r/\\lambda_D}+Be^{r/\\lambda_D}\\)。遠方で有界 → \\(B=0\\)。\\(r\\to0\\) で裸のクーロン \\(\\phi\\to q_T/4\\pi\\varepsilon_0r\\) に一致する条件から \\(A=q_T/4\\pi\\varepsilon_0\\)：\\[\\phi(r)=\\frac{q_T}{4\\pi\\varepsilon_0r}\\,e^{-r/\\lambda_D}\\] クーロンに指数減衰の「衣」を着せた湯川型。\\(r\\gg\\lambda_D\\) では実質見えない。`,
+  `<b>(3)</b> \\(r\\to0\\) では \\(\\phi\\to\\infty\\) となり \\(e\\phi\\ll T\\) が破れる（試験電荷のごく近傍は非線形領域）。それでも遠方の遮蔽構造は線形論で正しく捉えられる。依存性：\\(\\lambda_D\\propto\\sqrt{T}\\)——熱運動が激しいほど電子は電荷のまわりに留まれず、遮蔽雲がぼやけて広がる。\\(\\lambda_D\\propto1/\\sqrt{n_0}\\)——遮蔽要員が多いほど薄い層で電荷を打ち消せる。`]},
+
+{n:7, field:'wave', ch:'8章', title:'プラズマ振動とラングミュア波',
+ setup:`磁場のない一様プラズマの電子（密度 \\(n_0\\)、質量 \\(m_e\\)）の1次元静電振動を考える。イオンは動かない中性化背景。`,
+ subs:[
+  `冷たい電子（圧力なし）の連続の式・運動方程式・ポアソン方程式を線形化し、\\(\\omega=\\omega_{pe}=\\sqrt{n_0e^2/\\varepsilon_0m_e}\\) を導け。`,
+  `1次元断熱圧力 \\(p\\propto n^3\\)（\\(\\gamma=3\\)）を加えて Bohm–Gross 分散関係 \\(\\omega^2=\\omega_{pe}^2+3k^2v_{th}^2\\)（\\(v_{th}^2=T/m_e\\)）を導け。`,
+  `冷たい極限で群速度がゼロになることを確認し、「振動は伝わらない」「熱があると波になる」の物理を説明せよ。`],
+ sol:[
+  `<b>(1)</b> 線形化（\\(\\propto e^{i(kx-\\omega t)}\\)）：連続 \\(-i\\omega n_1+ikn_0u_1=0\\)、運動 \\(-i\\omega m_eu_1=-eE_1\\)、ポアソン \\(ikE_1=-en_1/\\varepsilon_0\\)。3式から \\(n_1,u_1,E_1\\) を消去：\\[\\omega^2=\\frac{n_0e^2}{\\varepsilon_0m_e}=\\omega_{pe}^2\\] \\(k\\) に依存しない：どの波長でも同じ周波数の局所振動。変位した電子群を電荷分離電場が引き戻す単振動そのもの。`,
+  `<b>(2)</b> 運動方程式に圧力項 \\(-\\partial_xp_1/n_0\\) を追加。\\(p\\propto n^3\\) の線形化で \\(p_1=3T n_1\\)：\\[-i\\omega m_eu_1=-eE_1-\\frac{3T\\,ik\\,n_1}{n_0}\\] 連続の式・ポアソン方程式と連立して \\[\\omega^2=\\omega_{pe}^2+3k^2v_{th}^2\\] （1次元圧縮で断熱指数 \\(\\gamma=(d+2)/d=3\\)：振動が速すぎて熱が横方向へ逃げないため1自由度断熱。）`,
+  `<b>(3)</b> 冷たい極限：\\(v_g=d\\omega/dk=0\\)。各点が同じ周波数で勝手に振動するだけで、位相は運ばれてもエネルギーは運ばれない（隣とつながる復元機構がない）。熱圧力が入ると「押し縮められた場所が隣を押す」音波的な結合が生まれ、\\(v_g=3kv_{th}^2/\\omega\\neq0\\)：初めて情報とエネルギーが伝わる本物の波（ラングミュア波）になる。位相速度が熱速度に近づく短波長ではランダウ減衰が待っている（次章）。`]},
+
+{n:8, field:'wave', ch:'9章', title:'ランダウ減衰：Vlasov方程式の線形解析',
+ setup:`磁場なし・一様・1次元のVlasov–Poisson系を考える：\\[\\frac{\\partial f}{\\partial t}+v\\frac{\\partial f}{\\partial x}-\\frac{e}{m_e}E\\frac{\\partial f}{\\partial v}=0,\\qquad \\frac{\\partial E}{\\partial x}=-\\frac{e}{\\varepsilon_0}\\int f_1\\,dv\\]`,
+ subs:[
+  `\\(f=f_0(v)+f_1\\)、\\(f_1,E\\propto e^{i(kx-\\omega t)}\\) で線形化し、誘電関数 \\[\\varepsilon(k,\\omega)=1-\\frac{\\omega_{pe}^2}{k^2}\\int\\frac{\\partial\\hat f_0/\\partial v}{v-\\omega/k}\\,dv=0\\] を導け（\\(\\hat f_0\\)：規格化分布）。`,
+  `被積分関数は \\(v=\\omega/k\\) に極をもつ。Landauの処方（初期値問題として \\(\\mathrm{Im}\\,\\omega>0\\) から解析接続）に従い、弱減衰極限で \\[\\gamma=\\frac{\\pi}{2}\\frac{\\omega_{pe}^3}{k^2}\\left.\\frac{\\partial\\hat f_0}{\\partial v}\\right|_{v=\\omega/k}\\] の形になることを示せ（数係数は追わなくてよい）。`,
+  `Maxwell分布で \\(\\gamma<0\\)（減衰）になる理由を共鳴粒子の得失で説明し、この過程が衝突による散逸と本質的に異なる点を述べよ。`],
+ sol:[
+  `<b>(1)</b> 線形化Vlasov：\\(-i(\\omega-kv)f_1=\\dfrac{e}{m_e}E\\dfrac{\\partial f_0}{\\partial v}\\) より \\[f_1=\\frac{ieE}{m_e}\\frac{\\partial f_0/\\partial v}{\\omega-kv}\\] ポアソン方程式 \\(ikE=-\\dfrac{e}{\\varepsilon_0}\\int f_1dv\\) に代入し、\\(E\\neq0\\) の条件として \\[1-\\frac{\\omega_{pe}^2}{k^2}\\int\\frac{\\partial\\hat f_0/\\partial v}{v-\\omega/k}dv=0\\] 分布の傾きが位相速度の周りでどう配置されているかが誘電応答を決める。`,
+  `<b>(2)</b> \\(\\mathrm{Im}\\,\\omega>0\\) から実軸へ近づけると、極は実軸上に降りてくる。Plemeljの公式 \\[\\frac{1}{v-v_\\phi\\mp i0}=\\mathrm{P}\\frac{1}{v-v_\\phi}\\pm i\\pi\\delta(v-v_\\phi)\\] により積分は主値＋半留数に分かれる。主値部分は実の分散（Bohm–Gross）を与え、\\(\\delta\\) 関数部分が虚部を与える。\\(\\omega=\\omega_r+i\\gamma\\)（\\(|\\gamma|\\ll\\omega_r\\)）として展開すると \\[\\gamma\\propto\\left.\\frac{\\partial\\hat f_0}{\\partial v}\\right|_{v_\\phi}\\] 係数まで含めれば \\(\\gamma=\\dfrac{\\pi}{2}\\dfrac{\\omega_{pe}^3}{k^2}\\hat f_0'(v_\\phi)\\)。<b>共鳴粒子（\\(v=v_\\phi\\) ちょうど）だけ</b>が虚部＝エネルギーの一方向の流れを作る。`,
+  `<b>(3)</b> 波の系で見ると、わずかに遅い粒子は波に押されて加速（波が損）、わずかに速い粒子は波を押して減速（波が得）。正味は両群の人数差＝\\(\\hat f_0'(v_\\phi)\\) で決まり、Maxwellは単調減少なので「遅い側」が常に多数→波は必ず損をして減衰。衝突散逸との違い：エントロピーが増えない可逆過程。エネルギーは熱にならず、分布関数の速度空間の細かい縞（位相混合）に蓄えられる。だから初期条件を反転するとプラズマエコーとして波が再生する——不可逆に見えて情報は失われていない。`]},
+
+{n:9, field:'wave', ch:'9-2章', title:'電磁波のプラズマ中の伝搬と遮断',
+ setup:`磁場のない一様プラズマ中を伝搬する横波電磁波（\\(\\boldsymbol{E}\\perp\\boldsymbol{k}\\)）を考える。`,
+ subs:[
+  `Maxwell方程式と電子の運動方程式（冷たい・非磁化）から分散関係 \\(\\omega^2=\\omega_{pe}^2+c^2k^2\\) を導け。`,
+  `\\(\\omega<\\omega_{pe}\\) で波数が純虚数になることを示し、表皮深さ（減衰長）を求めよ。遮断における反射でエネルギーはどうなるか。`,
+  `この物理の応用を2つ（電離層での短波反射、反射計による密度計測）挙げ、それぞれ分散関係のどの性質を使っているか述べよ。`],
+ sol:[
+  `<b>(1)</b> 電子の応答：\\(-i\\omega m_e\\boldsymbol{v}_1=-e\\boldsymbol{E}\\) より電流 \\(\\boldsymbol{J}=-en_0\\boldsymbol{v}_1=\\dfrac{in_0e^2}{m_e\\omega}\\boldsymbol{E}\\)。Maxwell方程式 \\(\\nabla\\times\\boldsymbol{B}=\\mu_0\\boldsymbol{J}+\\dfrac{1}{c^2}\\dfrac{\\partial\\boldsymbol{E}}{\\partial t}\\) と \\(\\nabla\\times\\boldsymbol{E}=-\\partial_t\\boldsymbol{B}\\) を組み、横波（\\(\\boldsymbol{k}\\cdot\\boldsymbol{E}=0\\)）に対して \\[c^2k^2=\\omega^2\\Big(1-\\frac{\\omega_{pe}^2}{\\omega^2}\\Big)\\ \\Rightarrow\\ \\omega^2=\\omega_{pe}^2+c^2k^2\\] 電子の慣性応答が変位電流を部分的に打ち消し、屈折率 \\(n^2=1-\\omega_{pe}^2/\\omega^2<1\\)。`,
+  `<b>(2)</b> \\(\\omega<\\omega_{pe}\\) では \\(k^2=(\\omega^2-\\omega_{pe}^2)/c^2<0\\)、\\(k=i\\kappa\\)：波は \\(e^{-\\kappa x}\\) で指数減衰（エバネッセント）。減衰長は \\[\\delta=\\frac{1}{\\kappa}=\\frac{c}{\\sqrt{\\omega_{pe}^2-\\omega^2}}\\ \\ \\to\\ \\frac{c}{\\omega_{pe}}\\quad\\text{（}\\omega\\ll\\omega_{pe}\\text{ の極限：無衝突表皮深さ）}\\] 減衰といっても吸収ではない：エバネッセント層内で電子が波を打ち返し、エネルギーは<b>全反射</b>で入射側へ戻る（遮断＝エネルギーを返す壁）。`,
+  `<b>(3)</b> <b>電離層反射</b>：短波（\\(\\omega<\\omega_{pe}\\) となる周波数）は電離層で全反射され地球の裏側まで届く。使う性質：遮断条件 \\(\\omega<\\omega_{pe}(n_e)\\)。<b>反射計</b>：周波数 \\(\\omega\\) の波は密度が \\(\\omega_{pe}(x)=\\omega\\) となる遮断層で反射する。往復位相から反射点の位置を割り出し、\\(\\omega\\) を掃引して密度プロファイル \\(n_e(x)\\) を非接触で再構成。使う性質：遮断密度が周波数で選べる（\\(n_c\\propto\\omega^2\\)）こと。`]},
+
+{n:10, field:'mhd', ch:'10章', title:'磁束凍結とAlfvén波',
+ setup:`理想MHD（抵抗ゼロ）を考える。オームの法則は \\(\\boldsymbol{E}+\\boldsymbol{u}\\times\\boldsymbol{B}=0\\)。`,
+ subs:[
+  `ファラデーの法則と組み合わせて誘導方程式 \\(\\dfrac{\\partial\\boldsymbol{B}}{\\partial t}=\\nabla\\times(\\boldsymbol{u}\\times\\boldsymbol{B})\\) を導き、流体とともに動くループを貫く磁束が保存されること（磁束凍結）の意味を述べよ。`,
+  `\\(\\boldsymbol{J}\\times\\boldsymbol{B}\\) を磁気圧と磁気張力に分解せよ。`,
+  `一様磁場 \\(\\boldsymbol{B}_0=B_0\\boldsymbol{e}_z\\)、密度 \\(\\rho\\) の非圧縮プラズマで、磁力線に沿って伝わる横波摂動を線形化し、Alfvén波 \\(\\omega=k_\\parallel v_A\\)、\\(v_A=B_0/\\sqrt{\\mu_0\\rho}\\) を導け。`],
+ sol:[
+  `<b>(1)</b> \\(\\boldsymbol{E}=-\\boldsymbol{u}\\times\\boldsymbol{B}\\) をファラデーの法則 \\(\\partial_t\\boldsymbol{B}=-\\nabla\\times\\boldsymbol{E}\\) に代入して誘導方程式を得る。流体とともに動くループ \\(C(t)\\) を貫く磁束の変化は \\[\\frac{d\\Phi}{dt}=\\int\\frac{\\partial\\boldsymbol{B}}{\\partial t}\\cdot d\\boldsymbol{S}-\\oint(\\boldsymbol{u}\\times\\boldsymbol{B})\\cdot d\\boldsymbol{l}\\] （第2項はループ自身の移動による掃引）。誘導方程式とストークスの定理で両項が打ち消し \\(d\\Phi/dt=0\\)。意味：磁力線はプラズマに凍りつき、一緒に運ばれ、切れたりつなぎ換わったりしない（トポロジー保存）。リコネクションには抵抗などの非理想項が必須。`,
+  `<b>(2)</b> \\(\\mu_0\\boldsymbol{J}=\\nabla\\times\\boldsymbol{B}\\) とベクトル恒等式 \\(\\nabla B^2=2(\\boldsymbol{B}\\cdot\\nabla)\\boldsymbol{B}+2\\boldsymbol{B}\\times(\\nabla\\times\\boldsymbol{B})\\) より \\[\\boldsymbol{J}\\times\\boldsymbol{B}=-\\nabla\\Big(\\frac{B^2}{2\\mu_0}\\Big)+\\frac{(\\boldsymbol{B}\\cdot\\nabla)\\boldsymbol{B}}{\\mu_0}\\] 第1項＝磁気圧（磁力線どうしの反発、風船）、第2項＝磁気張力（曲がった磁力線が伸びようとする、ゴムひも。大きさ \\(B^2/\\mu_0R_c\\)）。`,
+  `<b>(3)</b> 摂動 \\(\\boldsymbol{u}_1,\\boldsymbol{B}_1\\perp\\boldsymbol{B}_0\\)、\\(\\propto e^{i(k_\\parallel z-\\omega t)}\\)。運動方程式（非圧縮・圧力摂動は横波に効かない）：\\[-i\\omega\\rho\\,\\boldsymbol{u}_1=\\frac{(\\boldsymbol{B}_0\\cdot\\nabla)\\boldsymbol{B}_1}{\\mu_0}=\\frac{ik_\\parallel B_0}{\\mu_0}\\boldsymbol{B}_1\\] 誘導方程式：\\(-i\\omega\\boldsymbol{B}_1=ik_\\parallel B_0\\boldsymbol{u}_1\\)。2式から \\[\\omega^2=\\frac{k_\\parallel^2B_0^2}{\\mu_0\\rho}\\ \\Rightarrow\\ \\omega=k_\\parallel v_A\\] 復元力は磁気張力のみ：質量線密度 \\(\\rho\\)、張力 \\(B_0^2/\\mu_0\\) の弦を伝わる横波と完全に同型（\\(v=\\sqrt{張力/線密度}\\)）。`]},
+
+{n:11, field:'mhd', ch:'10-2章', title:'交換型（Rayleigh–Taylor型）不安定性',
+ setup:`磁場 \\(\\boldsymbol{B}=B\\boldsymbol{e}_z\\)、密度勾配 \\(\\nabla n_0=-\\dfrac{n_0}{L_n}\\boldsymbol{e}_x\\)（外向きに減少）、実効重力 \\(\\boldsymbol{g}=g\\boldsymbol{e}_x\\)（磁力線の悪い曲率を模擬）をもつスラブを考える。摂動は \\(\\propto e^{ik_yy+\\gamma t}\\)。`,
+ subs:[
+  `重力ドリフト \\(\\boldsymbol{v}_g=\\dfrac{m\\boldsymbol{g}\\times\\boldsymbol{B}}{qB^2}\\) がイオンと電子で逆向きであることを使い、密度の凸凹（山と谷）の縁に電荷がたまる機構を図式的に説明せよ。`,
+  `たまった電荷が作る電場による \\(E\\times B\\) ドリフトが、初期摂動を増幅する向きであることを確認せよ。`,
+  `連続の式と電荷保存を線形化すると成長率が \\(\\gamma=\\sqrt{g/L_n}\\) となる（導出は省略可）。この式の意味を古典的なRayleigh–Taylor不安定性 \\(\\gamma=\\sqrt{gk\\,\\mathcal{A}}\\) と対比し、「良い曲率・悪い曲率」の言葉で安定化条件を述べよ。`],
+ sol:[
+  `<b>(1)</b> 重力ドリフトはイオンが \\(\\boldsymbol{g}\\times\\boldsymbol{B}\\) 方向（例：\\(+y\\)）、電子が逆（\\(-y\\)）。密度に山と谷の凸凹があると、山の中では両者のドリフトによる電荷輸送が周囲より多く、山の \\(+y\\) 側の縁に正電荷、\\(-y\\) 側の縁に負電荷がたまる（谷では逆）。摂動の波にそって交互の電荷パターン＝摂動電場 \\(\\tilde E_y\\) が形成される。`,
+  `<b>(2)</b> 縁にたまった電荷の作る \\(\\tilde E_y\\) と背景磁場 \\(B\\boldsymbol{e}_z\\) による \\(E\\times B\\) ドリフトは \\(\\pm x\\) 方向。符号を追うと、密度の山（すでに高密度側から低密度側へ張り出した部分）ではドリフトがさらに \\(+x\\)（低密度側）へ、谷では \\(-x\\) へ向く——凸はより凸に、凹はより凹に。<b>重い流体と軽い流体（プラズマと磁場）の入れ替えが進む</b>正のフィードバックであり、磁力線を曲げない（張力コストゼロの）変形なので止める力がない。`,
+  `<b>(3)</b> \\(\\gamma=\\sqrt{g/L_n}\\)：加速度と勾配長だけで決まり、波数によらない（磁化プラズマの交換モードの特徴）。流体のRT \\(\\gamma=\\sqrt{gk\\mathcal{A}}\\)（\\(\\mathcal{A}\\)：Atwood数）では界面の鋭さ \\(k\\) が入るのと対応：\\(1/L_n\\) が実効的な「界面の鋭さ」の役。安定化：実効重力の正体は磁力線の曲率（遠心力）なので、曲率ベクトルと密度勾配が<b>逆向き</b>（凸側に高密度＝「良い曲率」）なら \\(g\\to-g\\) で \\(\\gamma^2<0\\)：振動して安定。トーラスでは外側が悪い曲率・内側が良い曲率で、磁力線が両方を通るように回転変換で平均化する（磁力線平均の井戸）ことが安定化の設計指針になる。`]},
+
+{n:12, field:'mhd', ch:'11章', title:'MHD平衡・磁束面・反磁性電流',
+ setup:`静的MHD平衡 \\(\\nabla p=\\boldsymbol{J}\\times\\boldsymbol{B}\\)（\\(\\mu_0\\boldsymbol{J}=\\nabla\\times\\boldsymbol{B}\\)）を考える。`,
+ subs:[
+  `平衡条件から \\(\\boldsymbol{B}\\cdot\\nabla p=0\\) と \\(\\boldsymbol{J}\\cdot\\nabla p=0\\) を示し、その幾何学的意味（磁束面の入れ子構造）を述べよ。`,
+  `平衡条件を垂直方向に解いて反磁性電流 \\(\\boldsymbol{J}_\\perp=\\dfrac{\\boldsymbol{B}\\times\\nabla p}{B^2}\\) を導け。この電流の名前の由来を説明せよ。`,
+  `直線 \\(\\theta\\) ピンチ（\\(\\boldsymbol{B}=B(r)\\boldsymbol{e}_z\\)）で圧力平衡 \\(p+\\dfrac{B^2}{2\\mu_0}=\\mathrm{const}\\) を導き、プラズマベータ \\(\\beta\\) の意味を述べよ。`],
+ sol:[
+  `<b>(1)</b> \\(\\nabla p=\\boldsymbol{J}\\times\\boldsymbol{B}\\) の両辺と \\(\\boldsymbol{B}\\) の内積：右辺は \\(\\boldsymbol{B}\\) に垂直なので \\(\\boldsymbol{B}\\cdot\\nabla p=0\\)。同様に \\(\\boldsymbol{J}\\) との内積で \\(\\boldsymbol{J}\\cdot\\nabla p=0\\)。意味：磁力線も電流線も、圧力一定の面の上に乗っている。よって平衡プラズマは「等圧面＝磁束面」が玉ねぎ状に入れ子になった構造をもち、圧力は磁束面のラベル（1変数）になる。トカマク平衡（Grad–Shafranov方程式）はこの構造を軸対称で書き下したもの。`,
+  `<b>(2)</b> \\(\\nabla p=\\boldsymbol{J}\\times\\boldsymbol{B}\\) の両辺に左から \\(\\boldsymbol{B}\\times\\)：\\[\\boldsymbol{B}\\times\\nabla p=\\boldsymbol{B}\\times(\\boldsymbol{J}\\times\\boldsymbol{B})=B^2\\boldsymbol{J}_\\perp\\] \\[\\therefore\\ \\boldsymbol{J}_\\perp=\\frac{\\boldsymbol{B}\\times\\nabla p}{B^2}\\] 由来：この電流が作る磁場は元の \\(\\boldsymbol{B}\\) を<b>弱める</b>向き（プラズマ内部で磁場を押し出す）。ミクロには、密度・温度勾配があると旋回軌道の重ね合わせが打ち消し残りの流れを作る（反磁性ドリフト）ことに対応。プラズマは本性的に反磁性体。`,
+  `<b>(3)</b> 直線磁場では磁気張力 \\((\\boldsymbol{B}\\cdot\\nabla)\\boldsymbol{B}=0\\)。平衡は \\[\\frac{d}{dr}\\Big(p+\\frac{B^2}{2\\mu_0}\\Big)=0\\ \\Rightarrow\\ p+\\frac{B^2}{2\\mu_0}=\\mathrm{const}\\] 熱圧力と磁気圧の和が一定：圧力の高い中心で磁場が弱い（反磁性の現れ）。\\(\\beta=\\dfrac{p}{B^2/2\\mu_0}\\) は「磁場でプラズマを支える効率」。\\(\\beta\\ll1\\)：磁場が支配的（多くの閉じ込め装置）。\\(\\beta\\sim1\\)：熱圧力が磁気圧に匹敵（経済的には理想だが不安定性の危険が増す）。`]},
+
+{n:13, field:'mhd', ch:'12章', title:'トーラス閉じ込めの破綻と回転変換',
+ setup:`純トロイダル磁場 \\(\\boldsymbol{B}=B_\\phi\\boldsymbol{e}_\\phi\\)、\\(B_\\phi=B_0R_0/R\\) のみをもつトーラスにプラズマを置く。`,
+ subs:[
+  `∇Bドリフトと曲率ドリフトの式を書き、この配位で両者が同じ向き（鉛直方向）を向き、イオンと電子で逆になることを示せ。`,
+  `その帰結としてプラズマ全体が外側（大半径方向）へ流出するまでの因果連鎖を、式を添えて3段階で説明せよ。`,
+  `磁力線にポロイダル成分を与える（回転変換）とこの破綻が防がれる機構を述べ、トカマクとヘリカル系の実現方法の違いを比較せよ。`],
+ sol:[
+  `<b>(1)</b> \\(B\\propto1/R\\) なので \\(\\nabla B=-\\dfrac{B}{R}\\boldsymbol{e}_R\\)。∇Bドリフト \\(\\boldsymbol{v}_{\\nabla B}=\\dfrac{mv_\\perp^2}{2qB^3}\\boldsymbol{B}\\times\\nabla B\\) と、曲率ドリフト \\(\\boldsymbol{v}_R=\\dfrac{mv_\\parallel^2}{qB^2R}\\boldsymbol{e}_R\\times\\boldsymbol{B}\\cdot\\)（真空場では \\(\\boldsymbol{e}_R\\times\\boldsymbol{B}=\\frac{R}{B}\\boldsymbol{B}\\times\\nabla B\\)）を合わせると \\[\\boldsymbol{v}_d=\\frac{m}{qB^3}\\Big(v_\\parallel^2+\\frac{v_\\perp^2}{2}\\Big)\\boldsymbol{B}\\times\\nabla B\\] \\(\\boldsymbol{B}\\times\\nabla B\\) は鉛直方向。\\(q\\) が分母に残るため、イオンと電子は上下逆にドリフトする。`,
+  `<b>(2)</b> ①<b>電荷分離</b>：上下逆のドリフトでトーラス断面の上に正、下に負（磁場の向きによる）の電荷がたまる。②<b>鉛直電場</b>：分離電荷が \\(\\boldsymbol{E}=E_z\\boldsymbol{e}_z\\) を作る。③<b>全体の外向き流出</b>：\\(\\boldsymbol{v}_E=\\dfrac{\\boldsymbol{E}\\times\\boldsymbol{B}}{B^2}\\) は \\(q\\) を含まないので、イオンも電子も一緒に大半径方向（外向き）へ。閉じ込めどころかプラズマ全体が壁へ運ばれる。ドリフトの \\(q\\) 依存性の表（4章）がそのまま破綻のシナリオになっている。`,
+  `<b>(3)</b> 磁力線がポロイダル方向にねじれていると、1本の磁力線が断面の上側と下側を交互に通過する。上下にたまりかけた電荷は、電子が磁力線に沿って高速で流れることで短絡（中和）され、鉛直電場が立たない——回転変換とは<b>電荷分離を平行電流で打ち消す配線</b>である。実現方法：<b>トカマク</b>はプラズマ自身にトロイダル電流を流しポロイダル磁場を作る（軸対称で作りやすいが、電流駆動が必要で電流由来の不安定性（キンク等）を抱える）。<b>ヘリカル/ステラレータ</b>は外部コイルの形状でねじる（プラズマ電流不要で定常運転向きだが、非軸対称で設計・工作が複雑）。`]},
+
+{n:14, field:'drift', ch:'13章', title:'Hasegawa–Wakatani（前編）：イオン応答と渦度方程式',
+ setup:`磁場 \\(\\boldsymbol{B}=B\\boldsymbol{e}_z\\)、密度勾配 \\(\\nabla n_0\\parallel-\\boldsymbol{e}_x\\) のプラズマで、静電ポテンシャル \\(\\phi(\\boldsymbol{r},t)\\) がドリフト波の時間スケール（\\(\\omega\\ll\\omega_{ci}\\)）で変動する。冷たいイオン（\\(T_i=0\\)）を考える。`,
+ subs:[
+  `イオンの運動方程式を \\(\\omega/\\omega_{ci}\\) で逐次展開し、垂直速度が \\(E\\times B\\) ドリフト＋分極ドリフト \\[\\boldsymbol{u}_{i\\perp}=\\frac{\\boldsymbol{e}_z\\times\\nabla\\phi}{B}-\\frac{m_i}{eB^2}\\frac{d}{dt}\\nabla_\\perp\\phi\\] となることを示せ（\\(d/dt=\\partial_t+\\boldsymbol{v}_E\\cdot\\nabla\\)）。`,
+  `\\(E\\times B\\) ドリフトが非圧縮（\\(\\nabla\\cdot\\boldsymbol{v}_E=0\\)、一様 \\(B\\)）であることを確認し、イオンの連続の式で密度変化を駆動できるのは分極ドリフトの発散だけであることを示せ。`,
+  `「分極ドリフトの発散＝渦度 \\(\\nabla_\\perp^2\\phi\\) の時間発展」という対応を書き下し、これが流体力学の慣性項に相当する理由を述べよ。`],
+ sol:[
+  `<b>(1)</b> 運動方程式 \\(m_i\\dfrac{d\\boldsymbol{u}_i}{dt}=e(-\\nabla\\phi+\\boldsymbol{u}_i\\times\\boldsymbol{B})\\)。最低次（左辺無視）：\\(0=-\\nabla_\\perp\\phi+\\boldsymbol{u}^{(0)}\\times\\boldsymbol{B}\\) → \\(\\boldsymbol{u}^{(0)}=\\boldsymbol{v}_E=\\dfrac{\\boldsymbol{e}_z\\times\\nabla\\phi}{B}\\)。次のオーダー：左辺に \\(\\boldsymbol{u}^{(0)}\\) を入れて \\[m_i\\frac{d\\boldsymbol{v}_E}{dt}=e\\,\\boldsymbol{u}^{(1)}\\times\\boldsymbol{B}\\ \\Rightarrow\\ \\boldsymbol{u}^{(1)}=-\\frac{m_i}{eB^2}\\frac{d}{dt}\\nabla_\\perp\\phi\\] （\\(\\boldsymbol{v}_E\\) の時間変化に必要な力をローレンツ力で賄う速度＝分極ドリフト。\\(d/dt\\) に \\(\\boldsymbol{v}_E\\cdot\\nabla\\) が入るのは移流も「電場の変化」として感じるから。）`,
+  `<b>(2)</b> \\(\\nabla\\cdot\\boldsymbol{v}_E=\\nabla\\cdot\\Big(\\dfrac{\\boldsymbol{e}_z\\times\\nabla\\phi}{B}\\Big)=\\dfrac{1}{B}\\boldsymbol{e}_z\\cdot(\\nabla\\times\\nabla\\phi)=0\\)（一様 \\(B\\)）。連続の式 \\(\\partial_tn+\\nabla\\cdot(n\\boldsymbol{u}_i)=0\\) で、\\(E\\times B\\) は「密度を運ぶが圧縮しない」移流のみに寄与し、局所的な密度の生成・消滅（圧縮）を担えるのは \\(\\nabla\\cdot\\boldsymbol{u}^{(1)}\\neq0\\) の分極ドリフトだけ。`,
+  `<b>(3)</b> \\[\\nabla\\cdot\\boldsymbol{u}^{(1)}=-\\frac{m_i}{eB^2}\\frac{d}{dt}\\nabla_\\perp^2\\phi\\] \\(\\nabla_\\perp^2\\phi\\) は \\(E\\times B\\) 流の渦度（\\(\\boldsymbol{e}_z\\cdot\\nabla\\times\\boldsymbol{v}_E=\\nabla_\\perp^2\\phi/B\\)）。つまり分極ドリフトの発散は「渦の強さの時間変化」に比例する。流体力学では渦度方程式は \\(\\rho\\,d\\boldsymbol{u}/dt\\)（慣性）の回転から出る——ここでも \\(m_i\\)（質量）に比例する項が渦の時間発展を担っており、役割が完全に対応。電流保存 \\(\\nabla\\cdot\\boldsymbol{j}=0\\) と組むと（後編）、この項が電子平行電流とバランスして渦度方程式が閉じる。`]},
+
+{n:15, field:'drift', ch:'13-2章', title:'Hasegawa–Wakatani（後編）：電子応答と方程式系',
+ setup:`前問の系で電子側を考える。電子は慣性を無視でき（\\(m_e\\to0\\)）、平行方向にはイオンとの衝突（摩擦、周波数 \\(\\nu\\)）を受ける。\\(N\\equiv\\ln n\\) とする。`,
+ subs:[
+  `平行方向の電子運動方程式（慣性なし・等温 \\(p_e=nT\\)・摩擦あり）から \\[u_{e\\parallel}=\\frac{T}{m_e\\nu}\\nabla_\\parallel\\Big(\\frac{e\\phi}{T}-N\\Big)\\] を導き、駆動が「ボルツマン平衡からのズレ」だけであることを説明せよ。`,
+  `電流保存 \\(\\nabla\\cdot\\boldsymbol{j}=0\\)（垂直：イオン分極電流、平行：電子流）と電子の連続の式から、Hasegawa–Wakatani方程式系 \\[\\frac{m_i}{eB^2}\\frac{d}{dt}\\nabla_\\perp^2\\phi=-D\\nabla_\\parallel^2\\Big(\\frac{e\\phi}{T}-N\\Big),\\qquad \\frac{dN}{dt}=-D\\nabla_\\parallel^2\\Big(\\frac{e\\phi}{T}-N\\Big)\\] （\\(D=T/m_e\\nu\\)、\\(d/dt=\\partial_t+\\boldsymbol{v}_E\\cdot\\nabla\\)）を導け。`,
+  `\\(N=N_0(x)+\\tilde N\\)、\\(\\phi=\\tilde\\phi\\) で線形化・フーリエ化し、\\((N_k,\\hat\\phi_k)\\)（\\(\\hat\\phi_k=e\\phi_k/T\\)）の固有方程式を書け。結合項の符号が「ボルツマン平衡への緩和」を表していることを確認せよ。`],
+ sol:[
+  `<b>(1)</b> 平行方向の力の釣り合い：\\[0=-T\\nabla_\\parallel n+en\\nabla_\\parallel\\phi-m_en\\nu\\,u_{e\\parallel}\\] \\(n\\) で割り \\(\\nabla_\\parallel\\ln n=\\nabla_\\parallel N\\) を使って解くと \\[u_{e\\parallel}=\\frac{T}{m_e\\nu}\\nabla_\\parallel\\Big(\\frac{e\\phi}{T}-N\\Big)\\] \\(e\\phi/T=N\\)（ボルツマン関係）が成り立っていれば圧力と静電力が完全に釣り合い流れはゼロ。流れを駆動するのはそこからのズレだけ——電子はズレを感知して埋めに走る。`,
+  `<b>(2)</b> <b>渦度方程式</b>：垂直電流＝イオン分極電流 \\(\\boldsymbol{j}_\\perp=en\\boldsymbol{u}^{(1)}\\)、平行電流 \\(j_\\parallel=-enu_{e\\parallel}\\)。\\(\\nabla\\cdot\\boldsymbol{j}=0\\) に前問(3)と(1)を代入して \\(en\\) で整理：\\[\\frac{m_i}{eB^2}\\frac{d}{dt}\\nabla_\\perp^2\\phi=-D\\nabla_\\parallel^2\\Big(\\frac{e\\phi}{T}-N\\Big)\\] <b>密度方程式</b>：電子の連続の式 \\(\\partial_tn+\\nabla\\cdot(n\\boldsymbol{v}_E)+\\nabla_\\parallel(nu_{e\\parallel})=0\\) を \\(n\\) で割り、\\(\\boldsymbol{v}_E\\) の非圧縮性を使うと \\[\\frac{dN}{dt}=-\\nabla_\\parallel u_{e\\parallel}=-D\\nabla_\\parallel^2\\Big(\\frac{e\\phi}{T}-N\\Big)\\] 未知数 \\((\\phi,N)\\) 2つに方程式2本で閉じる。両式とも同じ結合項 \\(-D\\nabla_\\parallel^2(e\\phi/T-N)\\) を持つのは、どちらも「電子平行流」という同一の物理を見ているから。`,
+  `<b>(3)</b> \\(\\propto e^{-i\\omega t+i\\boldsymbol{k}\\cdot\\boldsymbol{r}}\\)、\\(\\nabla_\\parallel^2\\to-k_\\parallel^2\\)、\\(A\\equiv Dk_\\parallel^2\\)、\\(\\omega_*\\equiv\\dfrac{k_yT}{eBL_n}\\)（\\(L_n=-1/N_0'>0\\)）とおくと \\[(-i\\omega+A)N_k=(A-i\\omega_*)\\hat\\phi_k,\\qquad i\\omega k_\\perp^2\\rho_s^2\\,\\hat\\phi_k=A(\\hat\\phi_k-N_k)\\] 符号の確認：密度の式を \\(\\partial_tN_k=A(\\hat\\phi_k-N_k)+\\cdots\\) と読むと、\\(N_k<\\hat\\phi_k\\) なら \\(N_k\\) が増えて \\(\\hat\\phi_k\\) に近づく——ボルツマン平衡へ<b>緩和する</b>正しい向き。もし逆符号ならズレが勝手に増幅する非物理な系になってしまう（符号チェックの定石）。`]},
+
+{n:16, field:'drift', ch:'13-3章', title:'分散関係と成長率：2つの極限展開',
+ setup:`前問の固有方程式から得られる分散関係 \\[\\omega^2k_\\perp^2\\rho_s^2+iA\\Big[\\omega(1+k_\\perp^2\\rho_s^2)-\\omega_*\\Big]=0\\] を考える。`,
+ subs:[
+  `固有方程式の行列式＝0からこの分散関係を導け。`,
+  `断熱極限 \\(A\\gg\\omega\\) で \\(\\omega=\\omega^{(0)}+\\omega^{(1)}\\) と展開し、\\[\\omega^{(0)}=\\frac{\\omega_*}{1+k_\\perp^2\\rho_s^2},\\qquad \\gamma=\\mathrm{Im}\\,\\omega^{(1)}=\\frac{\\omega_*^2k_\\perp^2\\rho_s^2}{A(1+k_\\perp^2\\rho_s^2)^3}>0\\] を導け。`,
+  `流体力学極限 \\(A\\ll\\omega\\) で最低次の \\(\\omega^{(0)}\\) を求め、両極限の \\(\\gamma\\) の \\(A\\) 依存性から「最も不安定な結合の強さ」を論ぜよ。`],
+ sol:[
+  `<b>(1)</b> 固有方程式を行列形式にすると \\[\\begin{pmatrix}-i\\omega+A & -(A-i\\omega_*)\\\\ -A & i\\omega k_\\perp^2\\rho_s^2+A\\end{pmatrix}\\begin{pmatrix}N_k\\\\ \\hat\\phi_k\\end{pmatrix}=0\\] 非自明解の条件 \\(\\det=0\\)：\\[(-i\\omega+A)(i\\omega k_\\perp^2\\rho_s^2+A)-A(A-i\\omega_*)=0\\] 展開すると \\(A^2\\) が相殺し \\[\\omega^2k_\\perp^2\\rho_s^2+iA\\Big[\\omega(1+k_\\perp^2\\rho_s^2)-\\omega_*\\Big]=0\\]`,
+  `<b>(2)</b> <b>\\(O(A)\\)</b>：\\(A\\) 比例項の消滅から \\(\\omega^{(0)}(1+k_\\perp^2\\rho_s^2)=\\omega_*\\)、実数の純ドリフト波。<b>\\(O(1)\\)</b>：\\(\\omega^2\\) 項を \\(\\omega^{(0)}\\) で評価し、角括弧に \\(\\omega^{(1)}\\) の寄与を残す：\\[(\\omega^{(0)})^2k_\\perp^2\\rho_s^2+iA\\,\\omega^{(1)}(1+k_\\perp^2\\rho_s^2)=0\\] \\[\\omega^{(1)}=\\frac{i(\\omega^{(0)})^2k_\\perp^2\\rho_s^2}{A(1+k_\\perp^2\\rho_s^2)}=\\frac{i\\,\\omega_*^2k_\\perp^2\\rho_s^2}{A(1+k_\\perp^2\\rho_s^2)^3}\\] 純虚数で虚部正：勾配（\\(\\omega_*\\neq0\\)）がある限り必ず成長する<b>普遍不安定性</b>。ただし \\(\\gamma\\propto1/A\\)：電子が速いほど位相差が小さく成長は弱い。`,
+  `<b>(3)</b> \\(A\\ll\\omega\\) では \\(iA\\omega(1+k_\\perp^2\\rho_s^2)\\) 項が両隣に比べ小さく、最低次は \\[(\\omega^{(0)})^2k_\\perp^2\\rho_s^2=iA\\omega_*\\ \\Rightarrow\\ \\omega^{(0)}=\\pm\\frac{1+i}{\\sqrt2}\\sqrt{\\frac{A\\omega_*}{k_\\perp^2\\rho_s^2}}\\] （\\(\\sqrt{i}=(1+i)/\\sqrt2\\)）。\\(+\\) 根は \\(\\gamma=\\mathrm{Re}\\,\\omega\\) 級の強い成長、ただし \\(\\gamma\\propto\\sqrt{A}\\)。まとめ：\\(\\gamma\\) は \\(A\\) 小で \\(\\sqrt{A}\\) で立ち上がり、\\(A\\) 大で \\(1/A\\) で落ちる → <b>\\(A\\sim\\omega_*\\) 付近が最も不安定</b>。「電子が波に付いていけそうで付いていけない」中間の結合が、位相差を最大限に活かす。`]},
+
+{n:17, field:'drift', ch:'13-3章', title:'準線形輸送：位相差から拡散係数へ',
+ setup:`成長したドリフト波による径方向の粒子輸送 \\(\\Gamma_x=\\langle\\tilde n\\,\\tilde v_x\\rangle\\)（\\(\\tilde v_x=-\\dfrac1B\\partial_y\\tilde\\phi\\)）を、線形解の位相関係を使って評価する（準線形解析）。`,
+ subs:[
+  `線形解 \\(N_k=\\dfrac{A-i\\omega_*}{A-i\\omega}\\hat\\phi_k\\) を \\(A\\gg\\omega\\) で展開し、位相遅れ \\(N_k\\simeq(1-i\\delta_k)\\hat\\phi_k\\)、\\(\\delta_k=\\dfrac{\\omega_*k_\\perp^2\\rho_s^2}{A(1+k_\\perp^2\\rho_s^2)}\\) を導け。`,
+  `モード \\(k\\) の粒子束 \\(\\Gamma_k=\\dfrac12\\mathrm{Re}\\big[\\tilde n_k\\tilde v_{x,k}^*\\big]\\) を計算し、\\(\\Gamma_k\\propto\\delta_k|\\hat\\phi_k|^2\\)（同位相なら輸送ゼロ）を示せ。`,
+  `\\(\\omega_*\\propto-\\partial_x n_0\\) を使って \\(\\Gamma_x=-D_{\\rm ql}\\partial_xn_0\\) の形にまとめ、\\(D_{\\rm ql}\\) の特徴を2つ（何に比例するか）述べよ。また準線形近似の限界を述べよ。`],
+ sol:[
+  `<b>(1)</b> \\[N_k=\\frac{A-i\\omega_*}{A-i\\omega}\\hat\\phi_k\\simeq\\Big(1-\\frac{i\\omega_*}{A}\\Big)\\Big(1+\\frac{i\\omega}{A}\\Big)\\hat\\phi_k\\simeq\\Big[1-\\frac{i(\\omega_*-\\omega^{(0)})}{A}\\Big]\\hat\\phi_k\\] \\(\\omega^{(0)}=\\omega_*/(1+k_\\perp^2\\rho_s^2)\\) を代入：\\[\\delta_k=\\frac{\\omega_*-\\omega^{(0)}}{A}=\\frac{\\omega_*k_\\perp^2\\rho_s^2}{A(1+k_\\perp^2\\rho_s^2)}>0\\] 完全断熱（\\(A\\to\\infty\\)）で \\(\\delta_k\\to0\\)：位相差は非断熱性の指標そのもの。`,
+  `<b>(2)</b> \\(\\tilde v_{x,k}=-\\dfrac{ik_y}{B}\\phi_k\\)、\\(\\tilde n_k=n_0N_k\\)、\\(\\phi_k=\\dfrac{T}{e}\\hat\\phi_k\\)：\\[\\Gamma_k=\\frac12\\mathrm{Re}\\Big[n_0(1-i\\delta_k)\\hat\\phi_k\\cdot\\frac{ik_yT}{eB}\\hat\\phi_k^*\\Big]=\\frac{n_0k_yT}{2eB}|\\hat\\phi_k|^2\\,\\mathrm{Re}\\big[i(1-i\\delta_k)\\big]\\] \\(\\mathrm{Re}[i(1-i\\delta_k)]=\\mathrm{Re}[i+\\delta_k]=\\delta_k\\)：\\[\\Gamma_k=\\frac{n_0k_yT}{2eB}\\,\\delta_k\\,|\\hat\\phi_k|^2\\] \\(\\tilde v_x\\) は \\(\\phi\\) より90°進んでいるので、同位相（\\(\\delta_k=0\\)）では1周期平均で完全に相殺。位相差の分だけ密度の山が外向き流に「乗り遅れて乗る」ことで正味の流れが残る。`,
+  `<b>(3)</b> \\(\\omega_*=\\dfrac{k_yT}{eBL_n}\\)、\\(\\dfrac{1}{L_n}=-\\dfrac{\\partial_xn_0}{n_0}\\) を \\(\\delta_k\\) に代入すると \\(\\Gamma_k\\propto-\\partial_xn_0\\)。全モード和で \\[\\Gamma_x=-D_{\\rm ql}\\frac{\\partial n_0}{\\partial x},\\qquad D_{\\rm ql}=\\sum_k\\frac{k_y^2\\rho_s^2c_s^2\\,k_\\perp^2\\rho_s^2}{2A(1+k_\\perp^2\\rho_s^2)}|\\hat\\phi_k|^2\\] 特徴：①<b>ゆらぎ強度 \\(|\\hat\\phi_k|^2\\) に比例</b>——ゆらぎが激しいほど速く運ぶ。②<b>勾配を緩める向き</b>（フィックの法則型）——波は自分を生んだ自由エネルギー源を自分で削る。限界：線形の位相関係をそのまま使ったため、\\(|\\hat\\phi_k|^2\\) の値（飽和振幅）は決められず、飽和した乱流では非線形モード結合・帯状流などで位相関係自体が変わる。「準線形の範囲では拡散的」という限定つきの結論であり、その先（間欠性、輸送障壁）が乱流輸送研究の主戦場。`]},
+{n:18, field:'drift', ch:'14章', title:'帯状流の発展方程式とドップラーシフト',
+ setup:`ドリフト波乱流をもつ磁化プラズマ（HWモデル、\\(\\boldsymbol{v}=\\dfrac{1}{B}\\boldsymbol{e}_z\\times\\nabla\\phi\\)）を考える。\\(y,z\\) 方向の平均を \\(\\langle\\cdot\\rangle\\) とし、帯状流速度を \\(V_y=\\dfrac{1}{B}\\partial_x\\langle\\phi\\rangle\\) と定義する。`,
+ subs:[
+  `\\(E\\times B\\) 流の渦度が \\(\\Omega_z=\\dfrac{1}{B}\\nabla_\\perp^2\\phi\\) であることを示し、HWの渦度方程式を \\(y,z\\) 平均して \\(\\partial_t\\langle\\nabla_\\perp^2\\phi\\rangle=-\\dfrac{1}{B}\\langle\\{\\phi,\\nabla_\\perp^2\\phi\\}\\rangle\\) を導け（右辺の結合項が平均で消える理由も述べよ）。`,
+  `ポアソン括弧の平均を部分積分で整理し、帯状流の発展方程式 \\(\\dfrac{\\partial V_y}{\\partial t}=-\\dfrac{\\partial}{\\partial x}\\langle\\tilde v_x\\tilde v_y\\rangle\\) を導け。右辺の物理的意味を述べよ。`,
+  `規格化HWで場を \\(\\phi=\\langle\\phi\\rangle+\\tilde\\phi\\) に分け、断熱極限 \\(\\alpha\\to\\infty\\) で線形化Hasegawa–Mima方程式に帰着させると、分散関係は \\(\\omega=\\dfrac{k_y\\kappa}{1+k_\\perp^2}+k_yU\\)（\\(U=\\partial_x\\langle\\phi\\rangle\\)）となる。第2項の意味と、この分散関係が13-3章の結果とどう接続するかを述べよ。`],
+ sol:[
+  `<b>(1)</b> \\(v_x=-\\dfrac{1}{B}\\partial_y\\phi,\\ v_y=\\dfrac{1}{B}\\partial_x\\phi\\) より \\[\\Omega_z=\\partial_xv_y-\\partial_yv_x=\\frac{1}{B}(\\partial_x^2\\phi+\\partial_y^2\\phi)=\\frac{1}{B}\\nabla_\\perp^2\\phi\\] 渦度方程式 \\(\\dfrac{m_i}{eB^2}\\dfrac{d}{dt}\\nabla_\\perp^2\\phi=-D\\nabla_\\parallel^2\\Big(\\dfrac{e\\phi}{T}-N\\Big)\\) を平均すると、右辺は \\(\\partial_z^2\\) の \\(z\\) 平均なので周期境界でゼロ（\\(\\oint\\partial_z(\\cdots)dz=0\\)）。左辺の移流部分だけが残り \\[\\partial_t\\langle\\nabla_\\perp^2\\phi\\rangle=-\\frac{1}{B}\\langle(\\boldsymbol{e}_z\\times\\nabla\\tilde\\phi)\\cdot\\nabla\\nabla_\\perp^2\\tilde\\phi\\rangle=-\\frac{1}{B}\\langle\\{\\phi,\\nabla_\\perp^2\\phi\\}\\rangle\\] 平均流を変えられるのは乱流の非線形項だけ、という構造が出発点。`,
+  `<b>(2)</b> \\(\\{\\phi,\\nabla_\\perp^2\\phi\\}=\\partial_x\\phi\\,\\partial_y\\nabla_\\perp^2\\phi-\\partial_y\\phi\\,\\partial_x\\nabla_\\perp^2\\phi\\)。平均のもとで \\(\\partial_y(\\cdots)\\) の全微分項は消えるので、部分積分を繰り返すと \\[\\langle\\{\\phi,\\nabla_\\perp^2\\phi\\}\\rangle=-\\partial_x^2\\langle\\partial_x\\phi\\,\\partial_y\\phi\\rangle\\] \\(\\langle\\nabla_\\perp^2\\phi\\rangle=B\\,\\partial_xV_y\\) に注意して \\(x\\) で1回積分すると \\[\\frac{\\partial V_y}{\\partial t}=-\\frac{\\partial}{\\partial x}\\langle\\tilde v_x\\tilde v_y\\rangle\\] 右辺は<b>レイノルズ応力</b>の発散：乱流の渦が斜めに傾いている（\\(\\langle\\tilde v_x\\tilde v_y\\rangle\\neq0\\)）とき、\\(y\\) 方向の運動量が \\(x\\) 方向に運ばれ、その不均一が平均流を加速する。外力なしで、乱流が自分の運動量を整理して帯状流を作る。`,
+  `<b>(3)</b> 第2項 \\(k_yU\\) は<b>帯状流によるドップラーシフト</b>：乱流は帯状流に乗って流されながら振動する（帯状流の \\(x\\) 依存性を通じて波束の屈折も起こす）。第1項は13-3章の断熱極限の分散関係 \\(\\omega^{(0)}=\\dfrac{\\omega_*}{1+k_\\perp^2\\rho_s^2}\\) の無次元版そのもの（\\(\\kappa\\propto\\omega_*\\)、長さを \\(\\rho_s\\) で測ったので \\(k_\\perp^2\\rho_s^2\\to k_\\perp^2\\)）。つまりこの式は「13-3章のドリフト波が、自分の作った帯状流の上に乗った」形であり、成長率ゼロ（純断熱）の骨組みに帯状流との相互作用だけを付け加えた最小モデルになっている。`]},
+
+{n:19, field:'drift', ch:'14章', title:'WKB近似・乱流振幅の保存則・波動運動論的方程式',
+ setup:`線形化Hasegawa–Mima方程式 \\(\\partial_t\\tilde q+U\\partial_y\\tilde q-\\kappa\\partial_y\\tilde\\phi=0\\)（\\(\\tilde q=\\nabla_\\perp^2\\tilde\\phi-\\tilde\\phi\\)）の乱流を、ゆっくり変化する帯状流 \\(U(X)\\) の上のWKB波束 \\[\\tilde\\phi=A(X,T)e^{i\\Theta}+A^*e^{-i\\Theta},\\qquad \\Theta=\\frac{1}{\\varepsilon}S(X,T)+k_yy\\] として扱う（\\(X=\\varepsilon x,\\ T=\\varepsilon t\\)）。`,
+ subs:[
+  `局所波数 \\(K=\\partial S/\\partial X\\) を使ってレイノルズ応力を評価し、\\(\\langle\\partial_x\\tilde\\phi\\,\\partial_y\\tilde\\phi\\rangle=2A^2Kk_y\\) を示せ。この結果から「応力がゼロでない＝渦が傾いている」ことを説明せよ。`,
+  `実周波数 \\(\\omega_R=\\dfrac{k_y\\kappa}{1+K^2+k_y^2}\\) の \\(K\\) 微分を計算して応力を \\(\\partial\\omega_R/\\partial K\\) で書き直し、乱流振幅の保存則 \\[\\frac{\\partial}{\\partial t}\\Big\\langle\\frac{\\tilde q^2}{2\\kappa}\\Big\\rangle+\\frac{\\partial}{\\partial x}\\Big\\langle\\frac{\\partial\\omega_R}{\\partial K}\\frac{\\tilde q^2}{2\\kappa}\\Big\\rangle=0\\] の意味を述べよ。`,
+  `位相の発展から光線方程式 \\(\\dot K=-\\partial\\omega/\\partial X,\\ \\dot X=\\partial\\omega/\\partial K\\) を導き、これがハミルトン力学と同型であることを確認せよ。さらに波束の分布関数 \\(\\mathcal{N}(x,k,t)\\) に対する波動運動論的方程式を書き、DW→ZF→DW抑制のフィードバックループを説明せよ。`],
+ sol:[
+  `<b>(1)</b> 主要項で \\(\\partial_x\\tilde\\phi\\simeq iAKe^{i\\Theta}+\\mathrm{c.c.}\\)、\\(\\partial_y\\tilde\\phi=ik_yAe^{i\\Theta}+\\mathrm{c.c.}\\)。積の速い位相平均では \\(e^{\\pm2i\\Theta}\\) の項が消え、交差項だけ残る：\\[\\langle\\partial_x\\tilde\\phi\\,\\partial_y\\tilde\\phi\\rangle=(iAK)(-ik_yA^*)+(-iA^*K)(ik_yA)=2|A|^2Kk_y\\] 応力は \\(x\\) 波数と \\(y\\) 波数の<b>積</b>に比例する。\\(K=0\\)（波面が \\(y\\) 軸に平行＝傾きのない渦）なら応力ゼロ。波数ベクトルが斜めを向いた「傾いた渦」だけが運動量を運ぶ。帯状流のシアは渦を引き伸ばして傾ける（\\(K\\) を変える）ので、シアが応力を作り応力がシアを強める、という増幅回路になっている。`,
+  `<b>(2)</b> \\[\\frac{\\partial\\omega_R}{\\partial K}=-\\frac{2Kk_y\\kappa}{(1+K^2+k_y^2)^2}\\ \\Rightarrow\\ 2Kk_y=-\\frac{(1+K^2+k_y^2)^2}{\\kappa}\\frac{\\partial\\omega_R}{\\partial K}\\] \\(\\tilde q_K=-(1+K^2+k_y^2)\\tilde\\phi_K\\) より \\(|\\tilde q_K|^2=(1+K^2+k_y^2)^2|A|^2\\) なので、応力は \\(\\dfrac{\\partial\\omega_R}{\\partial K}\\) と乱流強度 \\(\\langle\\tilde q^2/2\\kappa\\rangle\\) の積にまとまり、振幅の式が上記の保存則になる。意味：\\(\\partial\\omega_R/\\partial K=v_g\\)（群速度）なので、これは「乱流の強度が群速度で運ばれる」連続の式。乱流エネルギーは波束と一緒に \\(x\\) 方向を移動し、勝手に生成も消滅もしない（この縮約モデルの範囲で）。`,
+  `<b>(3)</b> \\(\\tilde\\phi\\propto e^{iS/\\varepsilon}\\) で \\(\\partial S/\\partial T=-\\omega\\)、\\(\\partial S/\\partial X=K\\)。後者を \\(T\\) 微分して前者を代入すると \\(\\dot K=-\\partial\\omega/\\partial X\\)、群速度の定義から \\(\\dot X=\\partial\\omega/\\partial K\\)。これは \\(\\omega(X,K)\\) をハミルトニアン、\\((X,K)\\) を正準対とする正準方程式と同型：波束は位相空間を流れる粒子である。したがって粒子のVlasov方程式と同じ形で波束数密度の保存則 \\[\\frac{\\partial\\mathcal{N}}{\\partial t}+\\frac{\\partial}{\\partial x}(v_g\\mathcal{N})-\\frac{\\partial\\omega}{\\partial x}\\frac{\\partial\\mathcal{N}}{\\partial k}=0\\] が成り立つ（波動運動論的方程式）。帯状流はこの分布の偏りから \\(\\partial_tV_y=-\\partial_x\\int\\dfrac{k_yK}{(1+k_y^2+K^2)^2}\\mathcal{N}\\,dk\\) と駆動される。ループ：勾配がDWを励起 → DWのレイノルズ応力がZFを加速 → ZFのシア（\\(\\partial\\omega/\\partial x=k_y\\partial U/\\partial x\\)）が波束の \\(K\\) をどんどん大きくし、短波長側へ流して減衰させる（DW抑制）→ 輸送が下がり勾配が回復 → …。乱流が自分の天敵を育てる捕食者・被食者系であり、ZFを強くできれば閉じ込めが改善する——講義全体の到達点。`]},
+
+];
+
+
+const done = new Set();
+let activeField = 'all';
+const filterEl = document.getElementById('filters');
+const allChip = document.createElement('button');
+allChip.className='chip'; allChip.textContent='すべて'; allChip.setAttribute('aria-pressed','true');
+allChip.onclick=()=>setFilter('all');
+filterEl.appendChild(allChip);
+Object.entries(FIELDS).forEach(([k,v])=>{
+  const b=document.createElement('button');
+  b.className='chip'; b.textContent=v.label; b.setAttribute('aria-pressed','false');
+  b.dataset.field=k; b.onclick=()=>setFilter(k);
+  filterEl.appendChild(b);
+});
+function setFilter(f){
+  activeField=f;
+  [...filterEl.children].forEach(c=>{
+    const isAll = c===allChip && f==='all';
+    const isMatch = c.dataset && c.dataset.field===f;
+    c.setAttribute('aria-pressed', (isAll||isMatch)?'true':'false');
+  });
+  render();
+}
+const listEl=document.getElementById('list');
+function render(){
+  const items = PROBLEMS.filter(p=>activeField==='all'||p.field===activeField);
+  listEl.innerHTML='';
+  if(!items.length){ listEl.innerHTML='<div class="empty">該当する問題がありません。</div>'; return; }
+  items.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='card'+(done.has(p.n)?' done':'');
+    const subs=p.subs.map(s=>`<li>${s}</li>`).join('');
+    const sols=p.sol.map(s=>`<div class="sol-step">${s}</div>`).join('');
+    card.innerHTML=`
+      <div class="card-head">
+        <span class="qnum">第${p.n}問</span>
+        <span class="qtitle">${p.title}</span>
+        <span class="tag">${FIELDS[p.field].label}</span>
+        <span class="tag">📖 ノート${p.ch}</span>
+      </div>
+      <div class="card-body">
+        <div class="setup">${p.setup}</div>
+        <ol class="subq">${subs}</ol>
+        <div class="actions">
+          <button class="btn btn-sol" aria-expanded="false">解答を表示</button>
+          <label class="check"><input type="checkbox" ${done.has(p.n)?'checked':''}> 習得した</label>
+        </div>
+        <div class="solution"><div class="sol-label">Solution</div>${sols}</div>
+      </div>`;
+    const solBtn=card.querySelector('.btn-sol');
+    const solBox=card.querySelector('.solution');
+    solBtn.onclick=()=>{
+      const open=solBox.classList.toggle('open');
+      solBtn.setAttribute('aria-expanded',open?'true':'false');
+      solBtn.textContent=open?'解答を隠す':'解答を表示';
+      if(open && window.MathJax?.typesetPromise) MathJax.typesetPromise([solBox]);
+    };
+    const cb=card.querySelector('.check input');
+    cb.onchange=()=>{ cb.checked?done.add(p.n):done.delete(p.n); card.classList.toggle('done',cb.checked); updateProgress(); };
+    listEl.appendChild(card);
+  });
+  if(window.__mjReady && window.MathJax?.typesetPromise) MathJax.typesetPromise([listEl]);
+}
+const ringFill=document.getElementById('ringFill');
+const C=2*Math.PI*22;
+ringFill.style.strokeDasharray=C;
+function updateProgress(){
+  const n=done.size, total=PROBLEMS.length;
+  document.getElementById('doneCount').textContent=n;
+  document.getElementById('totalCount').textContent=total;
+  document.getElementById('ringVal').textContent=Math.round(100*n/total)+'%';
+  ringFill.style.strokeDashoffset=C*(1-n/total);
+  document.getElementById('byField').textContent=Object.entries(FIELDS).map(([k,v])=>{
+    const fp=PROBLEMS.filter(p=>p.field===k);
+    return `${v.label} ${fp.filter(p=>done.has(p.n)).length}/${fp.length}`;
+  }).join(' ・ ');
+}
+document.getElementById('resetBtn').onclick=()=>{ done.clear(); updateProgress(); render(); };
+render();
+updateProgress();
+</script>
+</body>
+</html>
